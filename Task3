@@ -1,0 +1,40 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        String filePath = "data.txt"; 
+        List<Integer> inputKeys = Arrays.asList(5, 7, 10, 23);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath)) {
+            String line;
+            Map<String, Integer> concatenatedStringsCount = new HashMap<>();
+
+            while ((line = br.readLine()) != null) {
+                String[] keyValuePairs = line.split(";");
+                StringBuilder concatenatedString = new StringBuilder();
+
+                for (int key : inputKeys) {
+                    for (String pair : keyValuePairs) {
+                        String[] parts = pair.split("=");
+                        if (parts.length == 2 && Integer.parseInt(parts[0]) == key) {
+                            concatenatedString.append(parts[1]).append("|");
+                            break;
+                        }
+                    }
+                }
+
+                String result = concatenatedString.toString();
+                if (!result.isEmpty()) {
+                    result = result.substring(0, result.length() - 1);
+                    concatenatedStringsCount.put(result, concatenatedStringsCount.getOrDefault(result, 0) + 1);
+                }
+            }
+
+            for (Map.Entry<String, Integer> entry : concatenatedStringsCount.entrySet()) {
+                System.out.println(entry.getKey() + entry.getValue());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
